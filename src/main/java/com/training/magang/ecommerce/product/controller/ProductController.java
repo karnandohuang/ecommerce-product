@@ -1,6 +1,7 @@
 package com.training.magang.ecommerce.product.controller;
 
 
+import com.training.magang.ecommerce.product.model.ApiKey;
 import com.training.magang.ecommerce.product.model.Product;
 import com.training.magang.ecommerce.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ProductController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Product create(@RequestBody Product product){
+    public Product create(@RequestBody Product product, ApiKey apiKey){
         return productService.create(product);
     }
 
@@ -50,7 +51,7 @@ public class ProductController {
             method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Product update(@RequestBody Product product){
+    public Product update(@RequestBody Product product, ApiKey apiKey){
 
         return productService.update(product);
     }
@@ -60,7 +61,7 @@ public class ProductController {
             method = RequestMethod.DELETE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Product delete(@PathVariable("id") Long id){
+    public Product delete(@PathVariable("id") Long id, ApiKey apiKey){
 
         return productService.delete(id);
     }
