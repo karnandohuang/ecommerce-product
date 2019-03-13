@@ -5,6 +5,7 @@ import com.training.magang.ecommerce.product.model.Product;
 import com.training.magang.ecommerce.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,10 +14,13 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
     private ProductService productService;
 
     @RequestMapping(
-            value = "/products",
+            value = "api/products",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -25,15 +29,15 @@ public class ProductController {
     }
 
     @RequestMapping(
-            value = "/products/{id}",
+            value = "api/products/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product findById(@PathVariable("id") int id){
+    public Product findById(@PathVariable("id") Long id){
         return productService.findById(id);
     }
 
     @RequestMapping(
-            value = "/products",
+            value = "api/products",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Product> findAll(){
@@ -42,7 +46,7 @@ public class ProductController {
     }
 
     @RequestMapping(
-            value = "/products",
+            value = "api/products",
             method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
@@ -52,11 +56,11 @@ public class ProductController {
     }
 
     @RequestMapping(
-            value = "/products/{id}",
+            value = "api/products/{id}",
             method = RequestMethod.DELETE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Product delete(@PathVariable("id") int id){
+    public Product delete(@PathVariable("id") Long id){
 
         return productService.delete(id);
     }

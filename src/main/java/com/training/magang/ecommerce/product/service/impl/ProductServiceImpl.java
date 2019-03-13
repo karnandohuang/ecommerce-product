@@ -1,70 +1,64 @@
 package com.training.magang.ecommerce.product.service.impl;
 
 import com.training.magang.ecommerce.product.model.Product;
+import com.training.magang.ecommerce.product.repository.ProductRepository;
 import com.training.magang.ecommerce.product.service.ProductService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProductServiceImpl implements ProductService {
 
-    private ArrayList<Product> products = new ArrayList<>();
+    @Autowired
+    private ProductRepository productRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public Product create(Product product) {
 
-        products.add(product);
+        productRepository.save(product);
 
         return product;
     }
 
     @Override
-    public Product findById(int id) {
-        for (Product product: products) {
-            if(product.getId() == id){
-                return product;
-            }
-        }
-        return null;
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+                .orElse(null);
     }
 
     @Override
     public List<Product> findAll() {
-        return products;
+        return productRepository.findAll();
     }
 
     @Override
-    public Product update(Product newProduct) {
-
-        Product product1 = findById(newProduct.getId());
-
-        if(product1 == null)
-            return null;
-
-        for (Product product : products ) {
-
-            if(newProduct.getId() == product.getId()){
-                BeanUtils.copyProperties(product, newProduct);
-
-                return product;
-            }
+    public Product update(Product product) {
+        Product productData = findById(product.getId());
+        if (productData != null) {
+            BeanUtils.copyProperties(productData, product);
+            productRepository.save(productData);
+            return productData;
         }
 
         return null;
     }
 
     @Override
-    public Product delete(int id) {
+    public Product delete(Long id) {
+
         Product product = findById(id);
 
-        if(product == null)
-            return null;
+        productRepository.delete(product);
 
-        products.remove(findById(id));
-
-        return null;
+        return product;
     }
 }
